@@ -8,31 +8,34 @@ public class BattleOfSorts {
         //get input of user's desired amount of ints in arrays
         Scanner input = new Scanner(System.in);
         int arrayOfInts;
-        /*input number of ints for each list
-          Must be a positive integer above 0
-        */
-        //input for if user allows an array w/ over 300K elements is input
+
+        //confirmation input for when user wants more than 250K elements in each array.
         Scanner verifyBigInt = new Scanner(System.in);
 
+        /*
+          -Input number of ints for each list
+             -Must be a positive integer above 0
+        */
         do {
-            System.out.print("How many integers in the arrays for this test?: ");
+            System.out.print("How many integers in the arrays do you want for this test?: ");
             while (!input.hasNextInt()) {
                 System.out.print("Must be positive int!: ");
                 input.next();
             }
             arrayOfInts = input.nextInt();
-            if (arrayOfInts >= 300000) {
+
+          //for arrays of over 250K; confirm from user
+            if (arrayOfInts >= 250000) {
                 boolean yn;
-                System.out.println("Arrays w/ 300K or more elements may take an extremely long time depending on machine!");
+                System.out.println("Arrays w/ 250K or more elements may take an extremely long time depending on machine!");
                 System.out.print("Do you still want to continue? y/n: ");
                 do{
-                    //TODO: Remove spaces from input
                     switch (verifyBigInt.next().toLowerCase()) {
                         case "y":
                             yn = true;
                             break;
                         case "n":
-                            System.out.print("New arrays amount: ");
+                            System.out.print("New integers amount: ");
                             arrayOfInts = input.nextInt();
                             yn = true;
                             break;
@@ -44,58 +47,48 @@ public class BattleOfSorts {
                 }while(!yn);
             }
         } while (arrayOfInts < 0);
-
         System.out.println();
 
-        //TODO: Convert list creation into methods
         //ORDERED LIST
-        //Create sortOrdered
-
-        //public static double[] Ordered(int arrayOfInts) {
-            double[] sortOrdered = new double[arrayOfInts];
-            for(int i = 0; i < arrayOfInts; i++){
-                sortOrdered[i] = i;
-            }
-        //    return sortOrdered;
-        //}
+        double[] sortOrdered = new double[arrayOfInts];
+        for(int i = 0; i < arrayOfInts; i++){
+            sortOrdered[i] = i;
+        }
 
         //REVERSED LIST
-        //Create Reversed version of sortOrdered
+        //Create Reversed version of ordered list
         double[] sortReversed = new double[arrayOfInts];
         for(int i = 0; i < arrayOfInts; i++){
             //array length - 1 - current loop number; eg. 10 - 1 - 5 = 4
             sortReversed[i] = arrayOfInts - 1 - i;
         }
+
         //RANDOM LIST
         //Make Random object, the new array to be sorted, and an ArrayList object that will be modified later
         Random randInt = new Random();
         double[] sortRandom = new double[arrayOfInts];
         ArrayList<Integer> ints = new ArrayList<>();
-        //populate the array w/ a list in numerical order
+      //populate the array w/ a list in numerical order
         for(int i = 0;i < arrayOfInts; i++){
             ints.add(i);
         }
-        //comb through the array list; replace each index of the array w/ a random number not already in the array list
+      /*comb through the ordered array list
+        replace each index of the array w/ a random number not already in the array list
+      */
         for(int i = 0;i < arrayOfInts; i++){
             int j = ints.remove(randInt.nextInt(ints.size()));
             sortRandom[i] = j;
         }
 
-        //TODO: Remove clones once methods implemented
         //LIST CLONES
-        //make 3 extra clones of each array since each will be sorted once sort method is finished
+        /*make 3 extra clones of each array since each will be sorted once sort method is finished
+          Clear the lists after the test is finished to conserve memory for slower machines
+          (though difference may be negligible, it's better safe than sorry)
+        */
         double[] sortOrdered1 = sortOrdered.clone();
         double[] sortOrdered2 = sortOrdered.clone();
         double[] sortOrdered3 = sortOrdered.clone();
-        double[] sortReversed1 = sortReversed.clone();
-        double[] sortReversed2 = sortReversed.clone();
-        double[] sortReversed3 = sortReversed.clone();
-        double[] sortRandom1 = sortRandom.clone();
-        double[] sortRandom2 = sortRandom.clone();
-        double[] sortRandom3 = sortRandom.clone();
 
-
-        //TODO: Do other required tedious stuff here
         //Call each sort method using each array
         //Ordered sort
         System.out.printf("%26s%n", "---ORDERED LIST---");
@@ -103,24 +96,38 @@ public class BattleOfSorts {
         selectionSort(sortOrdered1);
         insertionSort(sortOrdered2);
         quickSort(sortOrdered3);
-
+        sortOrdered1 = null;
+        sortOrdered2 = null;
+        sortOrdered3 = null;
         System.out.println();
 
+        double[] sortReversed1 = sortReversed.clone();
+        double[] sortReversed2 = sortReversed.clone();
+        double[] sortReversed3 = sortReversed.clone();
         //Reversed sort
         System.out.printf("%27s%n", "---REVERSED LIST---");
         bubbleSort(sortReversed);
         selectionSort(sortReversed1);
         insertionSort(sortReversed2);
         quickSort(sortReversed3);
-
+        sortReversed1=null;
+        sortReversed2=null;
+        sortReversed3=null;
         System.out.println();
 
+
+        double[] sortRandom1 = sortRandom.clone();
+        double[] sortRandom2 = sortRandom.clone();
+        double[] sortRandom3 = sortRandom.clone();
         //Random sort
         System.out.printf("%25s%n", "---RANDOM LIST---");
         bubbleSort(sortRandom);
         selectionSort(sortRandom1);
         insertionSort(sortRandom2);
         quickSort(sortRandom3);
+        sortRandom1=null;
+        sortRandom2=null;
+        sortRandom3=null;
     }
 
 
