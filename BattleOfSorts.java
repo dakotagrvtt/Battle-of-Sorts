@@ -1,7 +1,6 @@
-import java.util.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Random;
 
 public class BattleOfSorts {
     public static void main(String[] args) {
@@ -50,23 +49,23 @@ public class BattleOfSorts {
         System.out.println();
 
         //ORDERED LIST
-        double[] sortOrdered = new double[arrayOfInts];
+        ArrayList<Integer> sortOrdered = new ArrayList<>(arrayOfInts);
         for(int i = 0; i < arrayOfInts; i++){
-            sortOrdered[i] = i;
+            sortOrdered.add(i, i);
         }
 
         //REVERSED LIST
         //Create Reversed version of ordered list
-        double[] sortReversed = new double[arrayOfInts];
+        ArrayList<Integer> sortReversed = new ArrayList<>(arrayOfInts);
         for(int i = 0; i < arrayOfInts; i++){
             //array length - 1 - current loop number; eg. 10 - 1 - 5 = 4
-            sortReversed[i] = arrayOfInts - 1 - i;
+            sortReversed.add(i, (arrayOfInts - 1 - i));
         }
 
         //RANDOM LIST
         //Make Random object, the new array to be sorted, and an ArrayList object that will be modified later
         Random randInt = new Random();
-        double[] sortRandom = new double[arrayOfInts];
+        ArrayList<Integer> sortRandom = new ArrayList<>(arrayOfInts);
         ArrayList<Integer> ints = new ArrayList<>();
       //populate the array w/ a list in numerical order
         for(int i = 0;i < arrayOfInts; i++){
@@ -77,7 +76,7 @@ public class BattleOfSorts {
       */
         for(int i = 0;i < arrayOfInts; i++){
             int j = ints.remove(randInt.nextInt(ints.size()));
-            sortRandom[i] = j;
+            sortRandom.add(i, j);
         }
 
         //LIST CLONES
@@ -85,9 +84,11 @@ public class BattleOfSorts {
           Clear the lists after the test is finished to conserve memory for slower machines
           (though difference may be negligible, it's better safe than sorry)
         */
-        double[] sortOrdered1 = sortOrdered.clone();
-        double[] sortOrdered2 = sortOrdered.clone();
-        double[] sortOrdered3 = sortOrdered.clone();
+        ArrayList<Integer> sortOrdered1 = new ArrayList<>(sortOrdered);
+        ArrayList<Integer> sortOrdered2 = new ArrayList<>(sortOrdered);
+        ArrayList<Integer> sortOrdered3 = new ArrayList<>(sortOrdered);
+        //ArrayList<Integer> sortOrdered4 = new ArrayList<>(sortOrdered);
+        ArrayList<Integer> sortOrdered5 = new ArrayList<>(sortOrdered);
 
         //Call each sort method using each array
         //Ordered sort
@@ -95,46 +96,70 @@ public class BattleOfSorts {
         bubbleSort(sortOrdered);
         selectionSort(sortOrdered1);
         insertionSort(sortOrdered2);
-        quickSort(sortOrdered3);
-        sortOrdered1 = null;
-        sortOrdered2 = null;
-        sortOrdered3 = null;
+        printMerge(sortOrdered3);
+        //radixSort
+        printQuickSort(sortOrdered5);
+
+        //clear ArrayLists
+        sortOrdered1.clear();
+        sortOrdered2.clear();
+        sortOrdered3.clear();
+        //sortOrdered4.clear();
+        sortOrdered5.clear();
         System.out.println();
 
-        double[] sortReversed1 = sortReversed.clone();
-        double[] sortReversed2 = sortReversed.clone();
-        double[] sortReversed3 = sortReversed.clone();
+
         //Reversed sort
+        ArrayList<Integer> sortReversed1 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortReversed2 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortReversed3 = new ArrayList<>(sortReversed);
+        //ArrayList<Integer> sortReversed4 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortReversed5 = new ArrayList<>(sortReversed);
         System.out.printf("%27s%n", "---REVERSED LIST---");
         bubbleSort(sortReversed);
         selectionSort(sortReversed1);
         insertionSort(sortReversed2);
-        quickSort(sortReversed3);
-        sortReversed1=null;
-        sortReversed2=null;
-        sortReversed3=null;
+        printMerge(sortReversed3);
+        //radixSort
+        System.out.println(sortReversed5);
+        printQuickSort(sortOrdered5);
+        System.out.println(sortReversed5);
+
+        //clear ArrayLists
+        sortReversed1.clear();
+        sortReversed2.clear();
+        sortReversed3.clear();
+        //sortReversed4.clear();
+        sortReversed5.clear();
         System.out.println();
 
 
-        double[] sortRandom1 = sortRandom.clone();
-        double[] sortRandom2 = sortRandom.clone();
-        double[] sortRandom3 = sortRandom.clone();
+        ArrayList<Integer> sortRandom1 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortRandom2 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortRandom3 = new ArrayList<>(sortReversed);
+        //ArrayList<Integer> sortRandom4 = new ArrayList<>(sortReversed);
+        ArrayList<Integer> sortRandom5 = new ArrayList<>(sortReversed);
         //Random sort
         System.out.printf("%25s%n", "---RANDOM LIST---");
         bubbleSort(sortRandom);
         selectionSort(sortRandom1);
         insertionSort(sortRandom2);
-        quickSort(sortRandom3);
-        sortRandom1=null;
-        sortRandom2=null;
-        sortRandom3=null;
+        printMerge(sortRandom3);
+        //radixSort
+        printQuickSort(sortRandom5);
+        sortRandom1.clear();
+        sortRandom2.clear();
+        sortRandom3.clear();
+        //sortRandom4.clear();
+        sortRandom5.clear();
     }
 
-
     //TODO: Implement more sort methods
-    //TODO: Do more required tedious stuff related to the stuff up top
+
     //Bubble Sort
-    public static void bubbleSort(double[] array){
+    //TODO: look for ways to speed up bubbleSort
+    //TODO: use cocktail sort?
+    public static void bubbleSort(ArrayList<Integer> array){
         System.out.print("   BUBBLE SORT: ");
 
         long startTime = System.currentTimeMillis();
@@ -143,15 +168,15 @@ public class BattleOfSorts {
         long swaps = 0;
         //take a pair of ints. Compare them. Swap if needed.
         //keeps track of already sorted positions in the array for each pass
-        for(int i = 0; i < array.length; i++){
-            for(int j = 1; j < array.length - i; j++){
-                double temp;
+        for(int i = 0; i < array.size(); i++){
+            for(int j = 1; j < array.size() - i; j++){
+                int temp;
               /*if array[i] is greater than array[j] then switch them.
                 Do this all the way to the last, then start at array[i]*/
-                if(array[j - 1] > array[j]){
-                    temp = array[j - 1];
-                    array[j-1] = array[j];
-                    array[j] = temp;
+                if(array.get(j - 1) > array.get(j)){
+                    temp = array.get(j - 1);
+                    array.set(j-1, array.get(j));
+                    array.set(j, temp);
                     swaps++;
                 }
             }
@@ -166,7 +191,7 @@ public class BattleOfSorts {
     }
 
     //Selection Sort
-    public static void selectionSort(double[] array){
+    public static void selectionSort(ArrayList<Integer> array){
         System.out.print("SELECTION SORT: ");
 
         long startTime = System.currentTimeMillis();
@@ -176,21 +201,21 @@ public class BattleOfSorts {
         //repeat. w/ index place increasing by one until you reach the last key
       /*since the last key will already be the largest in the list, time
           can be saved by excluding it in the for loop*/
-        for(int i = 0; i < array.length - 1; i++){
+        for(int i = 0; i < array.size() - 1; i++){
             //minIndex will be used to keep track of which indexes in the array were already passed through
-            double min = array[i];
+            int min = array.get(i);
             int minIndex = i;
-            for(int j = i + 1; j < array.length; j++){
-                if(min > array[j]){
-                    min = array[j];
+            for(int j = i + 1; j < array.size(); j++){
+                if(min > array.get(j)){
+                    min = array.get(j);
                     minIndex = j;
                 }
             }
           /*if i and index are not equal, swap array[index] and array[i];
             use a temp to hold array[index] for later declaration in array[i]*/
             if(minIndex != i){
-                array[minIndex] = array[i];
-                array[i] = min;
+                array.set(minIndex, array.get(i));
+                array.set(i, min);
                 swaps++;
             }
         }
@@ -204,25 +229,25 @@ public class BattleOfSorts {
     }
 
     //Insertion Sort
-    public static void insertionSort(double[] array){
+    public static void insertionSort(ArrayList<Integer> array){
         System.out.print("INSERTION SORT: ");
         long startTime = System.currentTimeMillis();
         // perform the task (i.e., call the appropriate method)
 
         long swaps = 0;
         //instantiate j so it may be used outside the 2nd for loop
-        //temp will hold the current element in array[i] for comparison/swaping later
+        //temp will hold the current element in array.get(i) for comparison/swapping later
         int j;
-        double temp;
-        for(int i = 1; i < array.length; i++){
-            temp = array[i];
+        int temp;
+        for(int i = 1; i < array.size(); i++){
+            temp = array.get(i);
             //j for loop will be checked and ran as long as array[j] is larger than the array[i] var
-            for(j = i - 1; (j >= 0) && (array[j] > temp); j--){
-                array[j+1] = array[j];
+            for(j = i - 1; (j >= 0) && (array.get(j) > temp); j--){
+                array.set(j+1, array.get(j));
                 swaps++;
             }
             //insert current element into array[j+1]
-            array[j+1] = temp;
+            array.set(j+1, temp);
         }
 
         long endTime = System.currentTimeMillis();
@@ -233,19 +258,113 @@ public class BattleOfSorts {
         System.out.println(" | swap " + swaps);
     }
 
-    //Quicksort
-    public static void quickSort(double[] array){
-        System.out.print("    QUICK SORT: ");
+    //Merge Sort
+    public static void printMerge(ArrayList<Integer> list){
+        System.out.print("   MERGE SORT: ");
+        long swaps = 0;
         long startTime = System.currentTimeMillis();
-        // perform the task (i.e., call the appropriate method)
 
-        Arrays.sort(array);
+        mergeSort(list);
 
         long endTime = System.currentTimeMillis();
         double executionTime = endTime - startTime;
         //return run time of sorting + swaps
         printTime(executionTime);
         System.out.println();
+    }
+    public static ArrayList<Integer> mergeSort(ArrayList<Integer> L) {
+
+        if (L.size() <= 1) {
+            return L;
+        }
+
+        //Splitting L ArrayList
+        ArrayList<Integer> a = new ArrayList<>(L.subList(0, L.size() / 2));
+        ArrayList<Integer> b = new ArrayList<>(L.subList(L.size() / 2, L.size()));
+
+        ArrayList<Integer> A = mergeSort(a);
+        ArrayList<Integer> B = mergeSort(b);
+        return merge(A, B);
+    }
+    private static ArrayList<Integer> merge(ArrayList<Integer> A, ArrayList<Integer> B) {
+        int iA = 0;
+        int iB = 0;
+        ArrayList<Integer> C = new ArrayList<>();
+
+        while (iA < A.size() && iB < B.size()) {
+            if(A.get(iA) < B.get(iB)){
+                C.add(A.get(iA));
+                iA++;
+            }
+            else{
+                C.add(B.get(iB));
+                iB++;
+            }
+        }
+        while (iA < A.size()) {
+            C.add(A.get(iA));
+            iA++;
+        }
+        while (iB < B.size()) {
+            C.add(B.get(iB));
+            iB++;
+        }
+        return C;
+    }
+
+    //Radix Sort
+
+    //Quicksort
+    public static void printQuickSort(ArrayList<Integer> array){
+        System.out.print("    QUICK SORT: ");
+        long startTime = System.currentTimeMillis();
+
+        int end = array.size() - 1;
+        quickSort(array, 0, end);
+
+        long endTime = System.currentTimeMillis();
+        double executionTime = endTime - startTime;
+        //return run time of sorting + swaps
+        printTime(executionTime);
+        System.out.println();
+    }
+
+    //TODO: Implement best form of Quicksort
+    public static ArrayList<Integer> quickSort(ArrayList<Integer> L, int start, int end){
+        if (start >= end) {
+            return L;
+        }
+        int pivot = L.get(start+(end-start) / 2);
+        int b = start;
+        int c = end;
+        while(b < c){
+            while (L.get(b) < pivot) {
+                b++;
+            }
+            while (L.get(c) > pivot){
+                c--;
+            }
+            if (b <= c) {
+                swap(L, b, c);
+                b++;
+                c--;
+            }
+        }
+        if(start < c){
+            return quickSort(L, start, c);
+        }
+        if(b < end){
+            return quickSort(L, pivot + 1, end);
+        }
+        return L;
+    }
+
+
+    //General swapping function
+    public static void swap(ArrayList<Integer> L, int i, int j){
+        Integer temp = L.get(j);
+        L.set(i, L.get(j));
+        L.set(j, temp);
     }
 
     //Convert times; Print as either milliseconds, minutes and/or seconds
