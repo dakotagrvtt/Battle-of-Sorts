@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class QuickSort {
-    private static ArrayList<Integer> array = new ArrayList<Integer>();
+    private static ArrayList<Integer> array = new ArrayList<>();
     private static int swaps;
 
     public QuickSort(ArrayList<Integer> array){
