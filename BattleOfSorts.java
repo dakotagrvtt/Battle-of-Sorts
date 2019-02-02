@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
 public class BattleOfSorts {
     public static void main(String[] args) {
@@ -10,10 +7,10 @@ public class BattleOfSorts {
         System.out.println();
 
         /*1. Create initial list
-          2. Create list duplicates
-          3. Call each sort method using each array
-          4. Clear ArrayList
-          5. Next sort method (repeat 2-4)
+          2. Create a list duplicate
+          3. Call a sort method for the recently created list duplicate
+          4. Clear last ArrayList
+          5. Repeat 2-4 for next sort method
           6. Clear initial list
           -Repeat for other list types (Reversed & Random)
         */
@@ -77,6 +74,8 @@ public class BattleOfSorts {
         ArrayList<Integer> sortRandom4 = new ArrayList<>(sortRandom);printMerge(sortRandom4);    sortRandom4.clear();
         ArrayList<Integer> sortRandom5 = new ArrayList<>(sortRandom);printQuickSort(sortRandom5);sortRandom5.clear();
         ArrayList<Integer> sortRandom6 = new ArrayList<>(sortRandom);sort(sortRandom6);          sortRandom6.clear();
+        ArrayList<Integer> sortRandom7 = new ArrayList<>(sortRandom);printRadix(sortRandom7);    sortRandom7.clear();
+
         sortRandom.clear();
     }
 
@@ -154,7 +153,7 @@ public class BattleOfSorts {
         long swaps = 0;
         //first find the min. number by combing the array, then swap w/ current index
         //repeat. w/ index place increasing by one until you reach the last key
-      /*since the last key will already be the largest in the list, time
+        /*since the last key will already be the largest in the list, time
           can be saved by excluding it in the for loop*/
         for(int i = 0; i < array.size() - 1; i++){
             //minIndex will be used to keep track of which indexes in the array were already passed through
@@ -212,11 +211,42 @@ public class BattleOfSorts {
         System.out.print("    RADIX SORT: ");
         long startTime = System.currentTimeMillis();
 
+        radixSort(L);
+
         long endTime = System.currentTimeMillis();
         double executionTime = endTime - startTime;
         //return run time of sorting
         printTime(executionTime);
         System.out.println();
+    }
+    public static ArrayList<Integer> radixSort(ArrayList<Integer> L){
+        ArrayList<Integer>[] bucket = new ArrayList[10];
+        for(int i = 0; i < 10; i++){
+            bucket[i] = new ArrayList<>();
+        }
+
+        //found out how many powers of 10 the array occupies
+        int arrayAmount = L.size() - 1;
+        int n = 1;
+        while(arrayAmount != 1){
+            arrayAmount /= 10;
+            n++;
+        }
+
+        //use the bucket system to sort through the array up to 10^n
+        int powersOfTen = 1;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < L.size(); j++){
+                bucket[(L.get(j)/powersOfTen)%10].add(L.get(j));
+            }
+            L.clear();
+            for(int k = 0; k < 10; k++){
+                L.addAll(bucket[k]);
+                bucket[k].clear();
+            }
+            powersOfTen = powersOfTen * 10;
+        }
+        return L;
     }
 
     //Merge Sort
