@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.Random;
 
 public class BattleOfSorts {
     public static void main(String[] args) {
@@ -25,8 +28,9 @@ public class BattleOfSorts {
         ArrayList<Integer> sortOrdered2 = new ArrayList<>(sortOrdered);selectionSort(sortOrdered2); sortOrdered2.clear();
         ArrayList<Integer> sortOrdered3 = new ArrayList<>(sortOrdered);insertionSort(sortOrdered3); sortOrdered3.clear();
         ArrayList<Integer> sortOrdered4 = new ArrayList<>(sortOrdered);printMerge(sortOrdered4);    sortOrdered4.clear();
-        ArrayList<Integer> sortOrdered5 = new ArrayList<>(sortOrdered);printQuickSort(sortOrdered5);sortOrdered5.clear();
-        ArrayList<Integer> sortOrdered6 = new ArrayList<>(sortOrdered);sort(sortOrdered6);          sortOrdered6.clear();
+        ArrayList<Integer> sortOrdered5 = new ArrayList<>(sortOrdered);radixSort(sortOrdered5);     sortOrdered5.clear();
+        ArrayList<Integer> sortOrdered6 = new ArrayList<>(sortOrdered);printQuickSort(sortOrdered6);sortOrdered6.clear();
+        ArrayList<Integer> sortOrdered7 = new ArrayList<>(sortOrdered);sort(sortOrdered7);          sortOrdered7.clear();
         sortOrdered.clear();
         System.out.println();
 
@@ -44,8 +48,9 @@ public class BattleOfSorts {
         ArrayList<Integer> sortReversed2 = new ArrayList<>(sortReversed);selectionSort(sortReversed2); sortReversed2.clear();
         ArrayList<Integer> sortReversed3 = new ArrayList<>(sortReversed);insertionSort(sortReversed3); sortReversed3.clear();
         ArrayList<Integer> sortReversed4 = new ArrayList<>(sortReversed);printMerge(sortReversed4);    sortReversed4.clear();
-        ArrayList<Integer> sortReversed5 = new ArrayList<>(sortReversed);printQuickSort(sortReversed5);sortReversed5.clear();
-        ArrayList<Integer> sortReversed6 = new ArrayList<>(sortReversed);sort(sortReversed6);          sortReversed6.clear();
+        ArrayList<Integer> sortReversed5 = new ArrayList<>(sortReversed);radixSort(sortReversed5);     sortReversed5.clear();
+        ArrayList<Integer> sortReversed6 = new ArrayList<>(sortReversed);printQuickSort(sortReversed6);sortReversed6.clear();
+        ArrayList<Integer> sortReversed7 = new ArrayList<>(sortReversed);sort(sortReversed7);          sortReversed7.clear();
         sortReversed.clear();
         System.out.println();
 
@@ -72,15 +77,15 @@ public class BattleOfSorts {
         ArrayList<Integer> sortRandom2 = new ArrayList<>(sortRandom);selectionSort(sortRandom2); sortRandom2.clear();
         ArrayList<Integer> sortRandom3 = new ArrayList<>(sortRandom);insertionSort(sortRandom3); sortRandom3.clear();
         ArrayList<Integer> sortRandom4 = new ArrayList<>(sortRandom);printMerge(sortRandom4);    sortRandom4.clear();
-        ArrayList<Integer> sortRandom5 = new ArrayList<>(sortRandom);printQuickSort(sortRandom5);sortRandom5.clear();
-        ArrayList<Integer> sortRandom6 = new ArrayList<>(sortRandom);sort(sortRandom6);          sortRandom6.clear();
-        ArrayList<Integer> sortRandom7 = new ArrayList<>(sortRandom);printRadix(sortRandom7);    sortRandom7.clear();
-
+        ArrayList<Integer> sortRandom5 = new ArrayList<>(sortRandom);radixSort(sortRandom5);     sortRandom5.clear();
+        ArrayList<Integer> sortRandom6 = new ArrayList<>(sortRandom);printQuickSort(sortRandom6);sortRandom6.clear();
+        ArrayList<Integer> sortRandom7 = new ArrayList<>(sortRandom);sort(sortRandom7);          sortRandom7.clear();
         sortRandom.clear();
     }
 
     //TODO: Implement more sort methods
-    public static void bubbleSort(ArrayList<Integer> array){
+    //Bubble Sort
+    private static void bubbleSort(ArrayList<Integer> array){
         //take a pair of ints. Compare them. Swap if needed.
         System.out.print("   BUBBLE SORT: ");
 
@@ -106,9 +111,8 @@ public class BattleOfSorts {
     }
 
     //Cocktail Sort
-    public static void cocktailSort(ArrayList<Integer> L){
-        /*Cocktail sort, while similar to bubble sort, is slightly faster, thus it is the
-        best and fastest implementation of the two*/
+    private static void cocktailSort(ArrayList<Integer> L){
+        //Cocktail sort, while similar to bubble sort, is somewhat faster with ordered lists (O(1))
         System.out.print(" COCKTAIL SORT: ");
 
         long startTime = System.currentTimeMillis();
@@ -146,7 +150,7 @@ public class BattleOfSorts {
     }
 
     //Selection Sort
-    public static void selectionSort(ArrayList<Integer> array){
+    private static void selectionSort(ArrayList<Integer> array){
         System.out.print("SELECTION SORT: ");
 
         long startTime = System.currentTimeMillis();
@@ -183,7 +187,7 @@ public class BattleOfSorts {
     }
 
     //Insertion Sort
-    public static void insertionSort(ArrayList<Integer> array){
+    private static void insertionSort(ArrayList<Integer> array){
         System.out.print("INSERTION SORT: ");
         long startTime = System.currentTimeMillis();
         long swaps = 0;
@@ -207,11 +211,41 @@ public class BattleOfSorts {
     }
 
     //Radix Sort
-    public static void printRadix(ArrayList<Integer> L){
+    private static void radixSort(ArrayList<Integer> L){
         System.out.print("    RADIX SORT: ");
         long startTime = System.currentTimeMillis();
 
-        radixSort(L);
+        ArrayList<Integer>[] bucket = new ArrayList[10];
+        for(int i = 0; i < 10; i++){
+            bucket[i] = new ArrayList<>();
+        }
+
+        //find out how many powers of 10 the array occupies
+        //e.g. if the array goes from 0 to 100,000 then 10^n where n = 5.
+        int arrayAmount = L.size() - 1;
+        int n = 1;
+        while(arrayAmount > 1){
+            arrayAmount /= 10;
+            n++;
+        }
+
+        //use the bucket system to sort through the array up to 10^n, starting at the 1's place
+        int powersOfTen = 1;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < L.size(); j++){
+                //Find the correct bucket for L[j]
+                bucket[(L.get(j)/powersOfTen)%10].add(L.get(j));
+            }
+
+            //clear L, then empty the buckets into L. L will now be sort for the n's place. Lastly, clear the current bucket
+            L.clear();
+            for(int k = 0; k < 10; k++){
+                L.addAll(bucket[k]);
+                bucket[k].clear();
+            }
+            //Bump up the power of 10 by 1 ; e.g. 10^0, 10^1, 10^2... 10^n
+            powersOfTen = powersOfTen * 10;
+        }
 
         long endTime = System.currentTimeMillis();
         double executionTime = endTime - startTime;
@@ -219,38 +253,9 @@ public class BattleOfSorts {
         printTime(executionTime);
         System.out.println();
     }
-    public static ArrayList<Integer> radixSort(ArrayList<Integer> L){
-        ArrayList<Integer>[] bucket = new ArrayList[10];
-        for(int i = 0; i < 10; i++){
-            bucket[i] = new ArrayList<>();
-        }
-
-        //found out how many powers of 10 the array occupies
-        int arrayAmount = L.size() - 1;
-        int n = 1;
-        while(arrayAmount != 1){
-            arrayAmount /= 10;
-            n++;
-        }
-
-        //use the bucket system to sort through the array up to 10^n
-        int powersOfTen = 1;
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < L.size(); j++){
-                bucket[(L.get(j)/powersOfTen)%10].add(L.get(j));
-            }
-            L.clear();
-            for(int k = 0; k < 10; k++){
-                L.addAll(bucket[k]);
-                bucket[k].clear();
-            }
-            powersOfTen = powersOfTen * 10;
-        }
-        return L;
-    }
 
     //Merge Sort
-    public static void printMerge(ArrayList<Integer> L){
+    private static void printMerge(ArrayList<Integer> L){
         System.out.print("    MERGE SORT: ");
         long startTime = System.currentTimeMillis();
 
@@ -262,7 +267,7 @@ public class BattleOfSorts {
         printTime(executionTime);
         System.out.println();
     }
-    public static ArrayList<Integer> mergeSort(ArrayList<Integer> L) {
+    private static ArrayList<Integer> mergeSort(ArrayList<Integer> L) {
         if (L.size() == 1) {
             return L;
         }
@@ -309,8 +314,8 @@ public class BattleOfSorts {
         }
     }
 
-    //Quicksort
-    public static void printQuickSort(ArrayList<Integer> L){
+    //Quick Sort
+    private static void printQuickSort(ArrayList<Integer> L){
         System.out.print("    QUICK SORT: ");
         long startTime = System.currentTimeMillis();
 
@@ -326,7 +331,7 @@ public class BattleOfSorts {
     }
 
     //Java's implementation of QuickSort
-    public static void sort(ArrayList<Integer> L){
+    private static void sort(ArrayList<Integer> L){
         System.out.print("     JAVA'S QS: ");
         long startTime = System.currentTimeMillis();
 
@@ -340,12 +345,10 @@ public class BattleOfSorts {
     }
 
     //Asks user for desired num of ints, then returns that int - with input validation
-    public static int introduction(){
+    private static int introduction(){
         Scanner input = new Scanner(System.in);
         int arrayOfInts;
 
-        //confirmation input for when user wants more than 250K elements in each array.
-        Scanner verifyBigInt = new Scanner(System.in);
         /*
           -Input number of ints for each list
              -Must be a positive integer above 0
@@ -354,7 +357,7 @@ public class BattleOfSorts {
             System.out.println("WARNING! Arrays w/ 200K+ integers may take an extremely long time to sort!");
             System.out.print("How many integers in the arrays do you want for this test?: ");
             while (!input.hasNextInt()) {
-                System.out.print("Must be a positive int! ");
+                System.out.print("Must be a positive int!\n");
                 input.next();
             }
             arrayOfInts = input.nextInt();
@@ -363,15 +366,15 @@ public class BattleOfSorts {
         return arrayOfInts;
     }
     //Convert times; Print as either milliseconds, minutes and/or seconds
-    public static void printTime(double time){
+    private static void printTime(double time){
         double minutes = (time / 1000) / 60;
         double seconds = (time / 1000) % 60;
 
-        if(time > 60000){
+        if(time >= 60000){
             System.out.printf("%2.0f minute(s) and %6.3f seconds", minutes, seconds);
         }
-        else if(time > 1000){
-            System.out.printf("%6.3f seconds", seconds);
+        else if(time >= 1000){
+            System.out.printf("%8.3f seconds", seconds);
         }
         else{
             System.out.printf("%4.0f milliseconds", time);
