@@ -12,6 +12,7 @@ May the best implementations win.
 6. Quick sort (custom implementation)
 7. Qucik sort (Java's implementation)
 8. Radix sort
+
 *More sorts to come*
 
 **Future Goals**
