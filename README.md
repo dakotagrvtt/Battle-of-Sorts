@@ -20,5 +20,5 @@ May the best implementations win.
 - Implement time scale that can be easily plopped into Excel for plotting
 - Create UI that includes selection of individual sorts, different time scales, and other important options
 - Create a runnable binary release
-- Convert all sorts to work for any Object type, not just positive integers
+- Convert all sorts to work for as many object types that it is suited for, not just positive integers
 - Allow the ability to create lists out of any object type from a file
